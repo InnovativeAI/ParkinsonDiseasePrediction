@@ -79,3 +79,21 @@ ros = RandomOverSampler(sampling_strategy='minority',
                         random_state=0)
 X,Y = ros.fit_resample(X_train, Y_train)
 X.shape, Y.shape
+
+from sklearn.metrics import roc_auc_score as ras
+models = [LogisticRegression(), XGBClassifier(), SVC(kernel='rbf')]
+
+for i in range(len(models)):
+    models[i].fit(X,Y)
+    print(f'{models[i]} : ')
+    train_preds = models[i].predict_proba(X)[:, 1]
+    print('Training Accuracy: ', ras(Y, train_preds))
+    val_preds = models[i].predict_proba(X_val)[:, 1]
+    print('Validation Accuracy : ', ras(Y_val, val_preds))
+    print()
+    
+metircs.plot_confusion_matrix(models[0], X_val, Y_val)
+plt.show()
+
+print(metrics.classification_report(Y_val, models[0].predict(X_val)))
+
