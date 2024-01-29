@@ -58,3 +58,24 @@ filtered_data['class'] = df['class']
 df = filtered_data
 df.shape
 
+x = df['class'].value_counts()
+plt.pie(x.values,
+        labels = x.index,
+        autopct = '%1.1f%%')
+plt.show()
+
+features = df.drop('class', axis=1)
+target = df['class']
+
+X_train, X_val, \
+    Y_train, Y_val = train_test_split(features, target,
+                                      test_size = 0.2,
+                                      random_state = 10)
+X_train.shape, X_val.shape
+
+# as the data was highly imbalanced we will balance
+# it by adding repetitive rows of minority class.
+ros = RandomOverSampler(sampling_strategy='minority',
+                        random_state=0)
+X,Y = ros.fit_resample(X_train, Y_train)
+X.shape, Y.shape
